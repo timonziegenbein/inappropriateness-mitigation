@@ -1,0 +1,138 @@
+{% load static %}
+{% include  "study/components/header.html" %}
+
+
+<div class="uk-section">
+
+  <div class="uk-container " style="text-align: justify;">
+      <h3>Introduction</h3>
+      <p>
+          In debates, controversial topics are discussed that can be of varying sensitivity for the participants and therefore have different emotional attachments.
+          It isn't easy to discuss specific issues healthily and productively, even in private everyday life.
+          In debates with strangers, thus, a neutral moderator usually leads the debate and makes sure that the participants and the matter in dispute (issue) are adequately treated.
+          In case of misconduct, debate participants are not only excluded from the debate but also have to fear consequences regarding their image and will not be invited to such debates in the future.
+          Since such consequences lead to complete exclusion from one's position, participants usually abide by the moderator's rules.
+          Although this may sound strict at first, it has become apparent that progress in conflict resolution requires rules that allow for both disagreement and agreement among participants without leading to the termination of the debate.
+      </p>  
+      <p>
+      On the contrary, online debates usually take place anonymously and often without moderators, which reduces the risks for participants and eventually leads to unhealthy conversations where participants can single-handedly sabotage entire debates without considerable consequences.
+      <p>
+      <p>
+          <strong>Consider the following example:</strong></br>
+          <blockquote>
+          In a debate on the abolition of the death penalty, Participants A and B discuss the matter with clear and understandable arguments.</br>
+          The discussion is calm and constructive.</br>
+          Suddenly, Participant C joins the debate and insults Participant A.</br>
+          Participant A then responds in similar fashion.</br>
+          The entire debate deteriorates into mutual name-calling and finger-pointing, with the actual issue being completely forgotten.</br>
+          The participants involved in the debate might be willing to continue the discussion and resolve their differences, but the whole debate is now effectively derailed.</br>
+          </blockquote>
+          In face-to-face debates, the moderator would most likely exclude Participant C from the debate for their misconduct, giving the remaining participants a chance to continue their discussion.
+          Participant C would also have to fear consequences for their behavior, such as being banned from future debates, which would discourage them from repeating their behavior.
+          In an online debate, however, Participant C can easily leave the debate and re-enter it at any time, without any consequences for their behavior.
+          This makes it very difficult for the remaining participants to resolve their differences, as they cannot be sure that the debate will not be derailed again.
+          Therefore, it is important to have a moderator in online debates who can ensure that the discussion stays on track and that participants treat each other with respect.
+        </p>
+        <h3>Task</h3>
+        <p>
+          In this study, <u>You</u> will be the moderator.
+          However, unlike the moderator of a face-to-face debate, you will only see the argument of a participant that was marked as inappropriate by another participant.
+          You will then be confronted with a potential rewrite of the argument and three statements adressing the prperties of the rewrite.
+          For each of the statements you must decide whether you agree or disagree with it and assign a score of 1 (fully disagree) to 5 (fully agree) to indicate how strongly you agree or disagree with it.
+        </p>
+                   
+        <p>
+        <strong><em>NOTE:</em></strong> &nbsp;
+        <ul>
+          <li>
+            To further speed things up, we will present you with the same argument multiple times in a row and most often only change the rewrite.
+          </li>
+        </ul>
+        </p>
+      </p>
+
+      <h3>Background</h3>
+      <h4>What makes an argument inappropriate?</h4>
+      <p>Argumentation has an appropriate style if the used language supports the creation of credibility and emotions as well as if it is proportional to the issue.
+         The choice of words and the grammatical complexity should appear suitable for a discussion, matching with how credibility and emotions are created via the content of the argumentation. 
+         We consider appropriateness to be the minimal requirement for an argument to be considered by other participants in a debate.
+         Below, we list the reasons why an argument can be considered inappropriate.
+      </p>
+      An argument is inappropriate because ...
+      <ol>
+      <li> ... the emotions appealed to are deceptive or their intensities do not provide room for critical evaluation of the issue by the reader.
+      </li>
+
+      <li> ... the issue is not taken seriously or openness to other’s arguments is absent.
+      </li>
+
+      <li> ... its meaning is unclear or irrelevant to the issue or if its reasoning is not understandable.
+      </li>
+
+      <li> ... it contains severe orthographic errors or for reasons any other reason that is not covered by the previous three reasons. 
+      </li>
+      </ol>
+
+      <h3>Annotation Tool</h3>
+      <p>Upon login, you are always redirected to this page (dashboard) where the guideline and an overview of your
+        progress is shown. </p>
+      <p>Below, we show you a table containing all the arguments, if it was annotated and the overall
+        progress. When you click on <strong>Annotate</strong>, you will be directed to the corresponding task page where you must answer all questions and submit. Upon submission, you will be automatically redirected to the next post to be annotated. From the task page, you can click the provided <strong>Back to Dashboard</strong> link to visit this page.</p>
+
+        
+      <p>Your annotations will be saved and you can logout and login again to
+        continue working.</p>
+  </div>
+
+  <div class="uk-container  uk-margin-top">
+    <h3> Task Progress </h3>
+    <br>
+    {% if total == annotated %}<div class="uk-alert uk-alert-success  uk-text-center" role="alert">Thank you for completing the
+      annotation! </div>{% endif %}
+    <div class="uk-alert uk-alert-primary uk-text-center" role="alert">You annotated {{annotated}} out of {{total}} arguments</div>
+    <br>
+
+
+    {% if posts|length > 0 %}
+    <div class="uk-overflow-auto">
+    <table class="uk-table uk-table-large uk-table-hover">
+      <thead>
+        <tr>
+          <!-- <th scope="col">ID</th> -->
+          <th scope="col">Issue</th>
+          <th scope="col">Argument</th>
+          <th scope="col">Rewrite</th>
+          <th scope="col">Annotated</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts.itertuples  %}
+
+        <tr id="{{post.id}}">
+          <!-- <td>{{post.id }}</td> -->
+          <td><p style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; line-height: 25px; height: 104px; max-height: 104px; -webkit-line-clamp: 4; -webkit-box-orient: vertical; max-width: 200px">{{post.issue}}"</p></td>
+          <td><p style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; line-height: 25px; height: 104px; max-height: 104px; -webkit-line-clamp: 4; -webkit-box-orient: vertical; max-width: 200px">{{post.source}}"</p></td>
+          <td><p style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; line-height: 25px; height: 104px; max-height: 104px; -webkit-line-clamp: 4; -webkit-box-orient: vertical; max-width: 200px">{{post.rewrite}}"</p></td>
+          <td class="text-center">{% if post.result != '' %}
+            <img src="{% static 'study/img/check.png' %}" width="35px" />
+            {% else %}
+            <img src="{% static 'study/img/not.png' %}" width="35px" />
+            {% endif %}
+          </td>
+          <td><a href="{% url 'annotate' post.id %}" class="uk-text-primary large-text uk-text-center">Annotate</a> </td>
+        </tr>
+
+        {% endfor%}
+
+
+      </tbody>
+    </table>
+  </div>
+    {% else %}
+    <span>No arguments uploaded yet, please contact us!</span>
+    {% endif %}
+
+  </div>
+</div>
+{% include "study/components/footer.html" %}

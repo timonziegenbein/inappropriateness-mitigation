@@ -1,0 +1,72 @@
+import pandas as pd
+from spacy.tokenizer import Tokenizer
+from spacy.lang.en import English
+
+
+def process_issue(x):
+    x = x.replace('-', ' ').strip().capitalize()
+    if x[-1]!= ['.','!','?',':']:
+        x = x+':'
+    return x
+
+def prepare_GAQ():
+    #read csv files
+    df_qa_dev = pd.read_csv('../../data/GAQCorpus_split/qa_forums_mixtrain_overlaptest_dev.csv')
+    df_qa_train = pd.read_csv('../../data/GAQCorpus_split/qa_forums_mixtrain_overlaptest_train.csv')
+    # read debate files
+    df_debate_dev = pd.read_csv('../../data/GAQCorpus_split/debate_forums_mixtrain_overlaptest_dev.csv')
+    df_debate_train = pd.read_csv('../../data/GAQCorpus_split/debate_forums_mixtrain_overlaptest_train.csv')
+    # read review files
+    df_review_dev = pd.read_csv('../../data/GAQCorpus_split/review_forums_mixtrain_overlaptest_dev.csv')
+    df_review_train = pd.read_csv('../../data/GAQCorpus_split/review_forums_mixtrain_overlaptest_train.csv')
+
+    df_dev = pd.concat([df_qa_dev, df_debate_dev, df_review_dev])
+    df_train = pd.concat([df_qa_train, df_debate_train, df_review_train])
+
+    df = pd.concat([df_dev, df_train])
+
+    df['titel'] = df['title'].apply(process_issue)
+    df['arg_issue'] = df[['title','text']].apply(lambda x: ' '.join(x), axis = 1)
+    df['arg_issue'] = df['arg_issue'].apply(lambda x: x.replace('\n', ' ').replace('\t', ' '))
+    print(df.shape)
+
+    df.to_csv('../../data/GAQCorpus_split/GAQ.csv', index = False, sep = '\t')
+
+def prepare_iac2():
+    nlp = English()
+    tokenizer = Tokenizer(nlp.vocab)
+
+    df_createdebate = pd.read_csv('../../data/iac2/createdebate_post_view.csv')
+    df_convinceme = pd.read_csv('../../data/iac2/convinceme_post_view.csv')
+   
+    #preprocess discussion title using preprocess_issue function
+    df_createdebate['discussion_title'] = df_createdebate['discussion_title'].apply(process_issue)
+    df_convinceme['discussion_title'] = df_convinceme['discussion_title'].apply(process_issue)
+
+    #concatenate discussion title and text
+    df_createdebate['arg_issue'] = df_createdebate[['discussion_title','text']].apply(lambda x: ' '.join(x), axis = 1)
+    df_convinceme['arg_issue'] = df_convinceme[['discussion_title','text']].apply(lambda x: ' '.join(x), axis = 1)
+    df_createdebate['arg_issue'] = df_createdebate['arg_issue'].apply(lambda x: x.replace('\n', ' ').replace('\t', ' '))
+    df_convinceme['arg_issue'] = df_convinceme['arg_issue'].apply(lambda x: x.replace('\n', ' ').replace('\t', ' '))
+
+    # filter out short and long texts
+    df_createdebate['num_words'] = df_createdebate['text'].apply(lambda x: len(tokenizer(x)))
+    df_createdebate = df_createdebate[df_createdebate['num_words'] <= 220]
+    df_createdebate = df_createdebate[df_createdebate['num_words'] >= 10]
+    df_createdebate = df_createdebate[df_createdebate['text'].apply(lambda x: len(x)) <= 1100]
+    
+    df_convinceme['num_words'] = df_convinceme['text'].apply(lambda x: len(tokenizer(x)))
+    df_convinceme = df_convinceme[df_convinceme['num_words'] <= 220]
+    df_convinceme = df_convinceme[df_convinceme['num_words'] >= 10]
+    df_convinceme = df_convinceme[df_convinceme['text'].apply(lambda x: len(x)) <= 1100]
+
+    # write both to csv
+    df_createdebate.to_csv('../../data/iac2/createdebate.csv', index = False, sep = '\t')
+    df_convinceme.to_csv('../../data/iac2/convinceme.csv', index = False, sep = '\t')
+
+if __name__ == "__main__":
+    prepare_GAQ()   
+    # read created csv  
+    df = pd.read_csv('../../data/GAQCorpus_split/GAQ.csv', sep = '\t')
+    print(df.shape)
+    prepare_iac2()

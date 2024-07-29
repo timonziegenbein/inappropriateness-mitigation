@@ -1,0 +1,262 @@
+{% load static %}
+{% include  "study/components/header.html" %}
+
+<div class="uk-container uk-container-large uk-margin-bottom">
+
+  <div class="uk-margin-top">
+    <h4><a href="{% url 'dashboard' %}">
+        << Back to Dashboard </a> </h4> 
+    <div class="uk-alert uk-alert-primary uk-text-center" role="alert">You annotated
+    {{annotated}} out of {{total}} arguments
+  </div>
+</div>
+<div class="uk-card uk-card-default uk-card-body">
+  <!--   <h5 class="uk-card-title">Id</h5>
+    <p>{{post.id}}</p>  -->
+<h5 class="uk-card-title" style="
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-weight: 600;
+">Context:</h5>
+<h5 class="uk-card-title" style="
+    margin-bottom: 5px;
+    margin-top: 0px;
+    /* font-weight: 600; */
+    font-size: 1em;
+">The original argument that was considered inappropriate by a discussion participant.</h5>
+ <div style="
+    display: table;
+    /* max-width: 50%; */
+    width: 50%;
+    background-color: #ebebeb;
+    margin-left: auto;
+    margin-right: auto;
+">  
+<h5 class="uk-card-title" style="
+    text-align: center;
+    background-color: #cbcbcb;
+    margin-top: 20px;
+">{{post.issue}}</h5>
+      <p style="
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+">{{post.source}}
+</p>
+</div>
+      <HR width="100%"  color="#519459" size="2">
+<div style="
+    overflow: hidden;
+">
+<h5 class="uk-card-title" style="
+    margin-bottom: 5px;
+    font-weight: 600;
+    margin-top: 0px;
+">Comparison:</h5>
+<h5 class="uk-card-title" style="
+    margin-bottom: 5px;
+    /* font-weight: 600; */
+    margin-top: 0px;
+    font-size: 1em;
+">Which rewrite of the original argument do you prefer?</h5>
+      <div style="
+    display: table-cell;
+    width: 50%;
+    background-color: aliceblue;
+">      <h5 class="uk-card-title" style="
+    text-align: center;
+    background-color: #97ceff;
+    margin-top: 20px;
+">Rewrite A</h5>
+      <p style="
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+">{{post.rewrite_a}}</p>
+      </div>
+      <div style="
+    display: table-cell;
+    background-color: bisque;
+">
+      <h5 class="uk-card-title" style="
+    text-align: center;
+    background-color: #ffc887;
+    margin-top: 20px;
+">Rewrite B</h5>
+      <p style="
+    text-align: center;
+    margin-left: 20px;
+    margin-right: 20px;
+">{{post.rewrite_b}}</p>
+      </div> 
+  </div>
+    <form id="annotated-form" action="{% url 'save_annotation'  %}" method="post" class="uk-form-stacked" novalidate>
+<div class="rangeslider-div">
+<div class="rangeslider-wrap">
+  <input type="range" min="0" max="8" step="1" labels="Definetly A, Very likely A, Likely A, Probably A, Undecided, Probably B, Likely B, Very likely B, Definetly B" name="rangeslider1" id="rangeslider1", value="rangeslider1">
+</div>
+</div>
+<!--
+      <HR width="100%"  color="#519459" size="2">
+
+<h5 class="uk-card-title" style="
+    font-weight: 600;
+    margin-bottom: 5px;
+    margin-top: 0px;
+">Reasons:</h5>
+-->
+  <div class="uk-container uk-container-large">
+      <input type="hidden" value="{{post.id}}" name="post_id" id="post_id">
+      <input type="hidden" value="{{post.source}}" name="post_text" id="post_text">
+      <input type="hidden" value="{{post.issue}}" name="post_issue" id="post_issue">
+      <input type="hidden" value="{{post.rewrite_a}}" name="post_rewrite_a" id="post_rewrite_a">
+      <input type="hidden" value="{{post.rewrite_b}}" name="post_rewrite_b" id="post_rewrite_b">
+
+      {% csrf_token %}
+      <div class="uk-margin-medium-bottom candidate-container">
+         <div>
+          <input type="hidden" value="" name="model_name" id="model_name">
+          <p><span id="heading" class="model-name"></span>{{prediction}}</p>
+        </div>
+
+        <!--
+        <div class="questions-container">
+        
+            <div class="uk-form-controls subcategory-container">
+                <div>
+                  <h5 style="margin-bottom: 5px;"> I selected the rewrite because it is ...</h5>
+                  <div class="other-error-types" id="errors-of">
+                    <div class="uk-container">
+                      <input class="uk-radio error-question" type="checkbox" name="otherErrorQuestion1"
+                        id="other1" value="other1">
+                      <label class="reply-label" for="other1">... more appropriate in terms of style and content</label> <br>
+                      <input class="uk-radio error-question" type="checkbox" name="otherErrorQuestion2"
+                        id="other2" value="other2">
+                      <label class="reply-label" for="other2">... better preserves the meaning of the original argument</label> <br>
+                      <input class="uk-radio error-question" type="checkbox" name="otherErrorQuestion3"
+                        id="other3" value="other3">
+                      <label class="reply-label" for="other3">... lexically more similar to the original the argument</label> <br>
+      
+                      <input class="uk-radio error-question" type="checkbox" name="otherErrorQuestion5"
+                        id="other5" value="other5">
+                      <label class="reply-label" for="other5">... (please explain)
+                        <div style="margin-left: 20px; margin-top: 5px;">
+                        <textarea class="uk-textarea" id="otherTextArea" rows="3" name="other" maxlength="1000" minlength="0"
+                        placeholder="Provide a reason why the selected rewrite to be better to you. This will help us to improve the guidelines and is much appreciated.">{{comments}}</textarea>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+      <HR width="100%"  color="#519459" size="2">
+            -->
+      <!-- Feedback -->
+      <div class="uk-margin-medium-bottom uk-margin-small-top">
+<h5 class="uk-card-title" style="
+    font-weight: 600;
+    margin-bottom: 5px;
+    margin-top: 0px;
+">Optional Feedback:</h5>
+        <textarea class="uk-textarea" id="commentsTextArea" rows="3" name="comments" maxlength="1000" minlength="0"
+          placeholder="Provide any comments or additional feedback you may have. This will help us and is much appreciated.">{{comments}}</textarea>
+        <br>
+      </div>
+      <!-- End of feedback-->
+      <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Submit</button>
+  </div>
+    </form>
+</div>
+<br>
+</div>
+</div>
+
+
+//<script>
+//  $(document).ready(function () {
+//
+//    $("#otherTextArea").prop('disabled', true);
+//
+//    // Disable submit button
+//    $(':input[type="submit"]').prop('disabled', true);
+//
+//    $("#other5").on('change', function () {      
+//      if ($("#other5").is(':checked')) {
+//        $("#otherTextArea").prop('disabled', false);
+//      }
+//      else {
+//        $("#otherTextArea").prop('disabled', true);
+//        $("#otherTextArea").val('');
+//      }
+//    })
+//
+//    $("input").on('change', function () {
+//        var yesOtherChecked = $("#other1").is(':checked') || $("#other2").is(':checked') || $("#other3").is(':checked') || $("#other5").is(':checked')
+//        var undecided = $("#rangeslider1").val() == 4
+//
+//        var otherQuestionSanity = 0
+//        var otherQuestionFeedbackSanity = 0
+//
+//        if (yesOtherChecked == 0 && undecided == 0) {
+//          $(':input[type="submit"]').prop('disabled', true); 
+//            var otherQuestionSanity = 0
+//        }
+//        else if (yesOtherChecked == 1 && undecided == 0) {
+//              var otherQuestionSanity = 1
+//              if ($("#other5").is(':checked') && !$("#otherTextArea").val()) {
+//                var otherQuestionSanity = 0
+//              }
+//          
+//          if (otherQuestionSanity == 1) {
+//            $(':input[type="submit"]').prop('disabled', false); 
+//          }
+//          else {
+//            $(':input[type="submit"]').prop('disabled', true); 
+//          }
+//        }
+//        else if (yesOtherChecked == 0 && undecided == 1) {
+//          $(':input[type="submit"]').prop('disabled', false); 
+//        }
+//        else if (yesOtherChecked == 1 && undecided == 1) {
+//          $(':input[type="submit"]').prop('disabled', true); 
+//        }
+//    })
+//
+//    $('#otherTextArea').on('input propertychange paste', function () {
+//        var yesOtherChecked = $("#other1").is(':checked') || $("#other2").is(':checked') || $("#other3").is(':checked') || $("#other5").is(':checked')
+//        var undecided = $("#rangeslider1").val() == 4
+//
+//        var otherQuestionSanity = 0
+//        var otherQuestionFeedbackSanity = 0
+//
+//        if (yesOtherChecked == 0 && undecided == 0) {
+//          $(':input[type="submit"]').prop('disabled', true); 
+//            var otherQuestionSanity = 0
+//        }
+//        else if (yesOtherChecked == 1 && undecided == 0) {
+//              var otherQuestionSanity = 1
+//              if ($("#other5").is(':checked') && !$("#otherTextArea").val()) {
+//                var otherQuestionSanity = 0
+//              }
+//          
+//          if (otherQuestionSanity == 1) {
+//            $(':input[type="submit"]').prop('disabled', false); 
+//          }
+//          else {
+//            $(':input[type="submit"]').prop('disabled', true); 
+//          }
+//        }
+//        else if (yesOtherChecked == 0 && undecided == 1) {
+//          $(':input[type="submit"]').prop('disabled', false); 
+//        }
+//        else if (yesOtherChecked == 1 && undecided == 1) {
+//          $(':input[type="submit"]').prop('disabled', true); 
+//        }
+//    })
+//    
+//  })
+//</script>
+<script src="https://rawgit.com/andreruffert/rangeslider.js/develop/dist/rangeslider.min.js"></script>
+<script src="{% static 'study/js/slider.js' %}"></script>
+{% include "study/components/footer.html" %}
