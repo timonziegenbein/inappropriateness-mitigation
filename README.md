@@ -3,6 +3,8 @@ This repository contains the source code used to obtain the results reported in 
 --
 We most notably published the code to train the **Rewriting Approaches for Inappropriateness Mitigation**. 
 
+**NOTE: You can now get the corpus-extension and the trained models directly from huggingface ([corpus](https://huggingface.co/datasets/timonziegenbein/appropriateness-corpus-extension), [models](https://huggingface.co/timonziegenbein/appropriateness-rewriter))**
+
 ## What does Inappropriateness mean?
 An argument “has an appropriate style if the used language supports the creation of credibility and emotions as well as if it is proportional to the issue.” Their annotation guidelines further suggest that “the choice of words and the grammatical complexity should [...] appear suitable for the topic discussed within the given setting [...], matching the way credibility and emotions are created [...]”. 
 > [Wachsmuth et al. (2017)](https://aclanthology.org/E17-1017/)
